@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" type="text/css" href="css/layui.css">
+	<link rel="stylesheet" type="text/css" href="css/modules/layer/default/layer.css"/>
+	<title>用户管理</title>
+</head>
+<body>
+	<table class="layui-hide" id="test" lay-filter="test"></table>
+	<script type="text/javascript" src="js/layui.js"></script>
+	<script type="text/javascript" src="js/index.js"></script>
+
+	<script type="text/html" id="barDemo">
+	  <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+	</script>
+
+	<script>
+		layui.use('table', function(){
+		  var table = layui.table;
+		  
+		  table.render({
+		    elem: '#test'
+		    ,url:'/adminuser'
+		    ,method: 'post'
+		    ,toolbar: '#toolbarDemo'
+		    ,title: '用户数据表'
+		    ,cols: [[
+		      {type: 'checkbox', fixed: 'left'}
+//		      ,{field:'id', title:'ID', width:80, fixed: 'left', unresize: true, sort: true}
+		      ,{field:'username', title:'用户名', width:120, edit: 'text'}
+		      ,{field:'userpic', title:'用户头像地址', width:200, edit: 'text'}
+		       ,{field:'dongtai', title:'动态数', width:120, edit: 'text'}
+		       ,{field:'jinbi', title:'金币数', width:120, edit: 'text'}
+		      ,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:200}
+		    ]]
+		  });
+
+		  //监听行工具事件
+		  table.on('tool(test)', function(obj){
+		    var data = obj.data;
+		    //console.log(obj)
+		    if(obj.event === 'del'){
+		      layer.confirm('真的删除行么', function(index){
+		      	layui.jquery.ajax({
+					type: "post",
+					url: "/adminDelete",
+					data: {'biao':'user','_id':obj.data._id},
+					dataType: "json",
+					success: function(data) {
+						layer.msg('删除成功');
+					}
+				});
+		        obj.del();
+		        layer.close(index);
+		      });
+		    } else if(obj.event === 'edit'){
+		      layer.prompt({
+		        formType: 2
+		        ,value: data.username
+		      }, function(value, index){
+		        obj.update({
+		          username: value
+		        });
+		        layer.close(index);
+		      });
+		    }
+		  });
+		});
+	</script>
+</body>
+</html>

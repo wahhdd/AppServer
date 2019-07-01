@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta charset="UTF-8">
+		<link rel="stylesheet" type="text/css" href="css/layui.css">
+		<link rel="stylesheet" type="text/css" href="css/modules/layer/default/layer.css" />
+		<title>景点管理</title>
+		<script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
+		<style>
+			#ddd {
+				position: fixed;
+				height: 100%;
+				width: 100%;
+				background: rgba(0, 0, 0, 0.8);
+				z-index: 9999;
+				top: 0;
+				display: none;
+			}
+			
+			#ff {
+				position: fixed;
+				left: 50%;
+				top: 50%;
+				font-size: 32px;
+				transform: translate(-50%, -50%);
+				z-index: 99;
+			}
+		</style>
+	</head>
+
+	<body>
+		<form class="layui-form zengjia" method="post" v-on:submit.prevent="onSubmit" id="tel">
+			<div style="display: flex; margin-top: 50px;">
+				<div class="layui-form-item">
+					<label class="layui-form-label">视频类型</label>
+					<div class="layui-input-block">
+						<select name="interest" lay-filter="aihao" v-model="title">
+							<option value=""></option>
+							<option value="1" selected="">健康知识</option>
+							<option value="2">健走知识</option>
+							<option value="3">热门播单</option>
+						</select>
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<label class="layui-form-label">图片地址</label>
+					<div class="layui-input-block" style="width: 250;">
+						<input type="text" name="title" lay-verify="title" autocomplete="off" placeholder="请输入地址" class="layui-input" v-model.lazy="pic">
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<label class="layui-form-label">视频地址</label>
+					<div class="layui-input-block" style="width: 250;">
+						<input type="text" name="title" lay-verify="title" autocomplete="off" placeholder="请输入地址" class="layui-input" v-model.lazy="aderess">
+					</div>
+				</div>
+			</div>
+			<div style="display: flex;">
+				<div class="layui-form-item layui-form-text" style="width: 500px;">
+					<label class="layui-form-label">视频描述</label>
+					<div class="layui-input-block">
+						<textarea placeholder="请输入内容" class="layui-textarea" v-model.lazy="yes"></textarea>
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<div class="layui-input-block">
+						<button class="layui-btn" type="submit" lay-filter="demo1">添加</button>
+					</div>
+				</div>
+			</div>
+
+		</form>
+		<div id="ddd">
+			<div id="ff" class='layui-icon layui-icon-refresh layui-anim layui-anim-loop'></div>
+		</div>
+		<table class="layui-hide" id="test" lay-filter="test"></table>
+		<div id="wwwww" style="display: none;">
+			<form class="layui-form zengjia"  id="tell" method="post" v-on:submit.prevent="onSubmit" >
+				<div style="margin-top: 50px; width: 475px;">
+					<div class="layui-form-item">
+						<label class="layui-form-label">视频类型</label>
+						<div class="layui-input-block">
+							<select name="interest" lay-filter="aihao" id="1" >
+								<option value=""></option>
+								<option value="健康知识" selected="">健康知识</option>
+								<option value="健走知识">健走知识</option>
+								<option value="热门播单">热门播单</option>
+							</select>
+						</div>
+					</div>
+					<div class="layui-form-item">
+						<label class="layui-form-label">图片地址</label>
+						<div class="layui-input-block" style="width: 250;">
+							<input type="text" name="title" lay-verify="title" autocomplete="off" placeholder="请输入地址" class="layui-input" id="2">
+						</div>
+					</div>
+					<div class="layui-form-item">
+						<label class="layui-form-label">视频地址</label>
+						<div class="layui-input-block" style="width: 250;">
+							<input type="text" name="title" lay-verify="title" autocomplete="off" placeholder="请输入地址" class="layui-input" id="3" >
+						</div>
+					</div>
+				</div>
+				<div class="layui-form-item layui-form-text" style="width: 475px;">
+					<label class="layui-form-label">视频描述</label>
+					<div class="layui-input-block">
+						<textarea placeholder="请输入内容" class="layui-textarea" id="4"></textarea>
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<div class="layui-input-block">
+						<button class="layui-btn" lay-filter="demo1" id="su">确定</button>
+					</div>
+				</div>
+			</form>
+		</div>
+		<div id="rrrr" style="position: absolute; top: 694px;"></div>
+		<script type="text/javascript" src="js/layui.js"></script>
+		<script type="text/javascript" src="js/index.js"></script>
+
+		<script type="text/html" id="barDemo">
+			<a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+			<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+		</script>
+		<script>
+			var vm = new Vue({
+				el: '#tel',
+				data: {
+					pic: '',
+					title: '健康知识',
+					aderess: '',
+					yes:''
+				},
+				methods: {
+					onSubmit() {
+						var obj = {};
+						var bb={}
+						obj.pic = this.pic;
+						obj.title = this.title;
+						obj.aderess = this.aderess;
+						obj.yes = this.yes;
+						bb.biao='shipin',
+						bb.obj=obj;
+						layui.jquery.ajax({
+							type: "post",
+							url: "/adminAdd",
+							data: JSON.stringify(bb),
+							success: function(data) {
+								layer.msg('添加成功');
+							},
+							error: function(error) {
+								console.log(error)
+							}
+						});
+					},
+				}
+			})
+			var vm2 = new Vue({
+				el: '#tell',
+				methods: {
+					onSubmit() {
+						var su=document.getElementById('su'),obj={},obj1={};
+						 var dd=document.getElementById('1'),
+							    ee=document.getElementById('2'),
+							    ff=document.getElementById('3'),
+							    gg=document.getElementById('4'),
+							    su=document.getElementById('su');
+						obj.pic=ee.value;
+						obj.title=dd.value;
+						obj.aderess=ff.value;
+						obj.yes=gg.value;
+						obj1._id=su.prototype.data._id;
+						obj1.biao='shipin';
+						obj1.obj=obj;
+						layui.jquery.ajax({
+							type: "post",
+							url: "/adminEdit",
+							data: JSON.stringify(obj1),
+							success: function(data) {
+								console.log(222)
+								layer.msg('添加成功');
+								su.prototype.update(obj);
+							},
+							error: function(error) {
+								console.log(error);
+								layer.msg('添加失败');
+							}
+						});
+						layer.close(su.index)
+					}
+				}
+			})
+		</script>
+		<script>
+			layui.use(['layer', 'form'], function() {
+				var $ = layui.jquery,
+					form = layui.form;
+				form.render();
+			});
+		</script>
+		<script>
+			layui.use('table', function() {
+				var table = layui.table;
+				var laypage = layui.laypage;
+				laypage.render({
+			   	 	elem: 'rrrr' //注意，这里的 test1 是 ID，不用加 # 号
+			    	,count: 30 //数据总数，从服务端得到
+			    	,jump: function(obj, first){
+					    //obj包含了当前分页的所有参数，比如：
+					    table.render({
+							elem: '#test',
+							url: '/adminshipin?jj='+obj.curr,
+//							method: 'post',
+							toolbar: '#toolbarDemo',
+							title: '用户数据表',
+							cols: [
+								[{
+									type: 'checkbox',
+									fixed: 'left'
+								}, {
+									field: 'title',
+									title: '类型',
+									width: 120,
+									fixed: 'left',
+									//							unresize: true,
+									//							sort: true
+								}, {
+									field: 'pic',
+									title: '图片地址',
+									width: 200,
+									edit: 'text',
+									templet: function(res) {
+										return '<em>' + res.pic + '</em>'
+										//								return "<img src="+res.pic+"/>"
+									}
+								}, {
+									field: 'aderess',
+									title: '视频地址',
+									width: 200,
+									edit: 'text',
+									templet: function(res) {
+										return '<em>' + res.aderess + '</em>'
+									}
+								}, {
+									field: 'yes',
+									title: '描述',
+									width: 200,
+									edit: 'text',
+									templet: function(res) {
+										return '<em>' + res.yes + '</em>'
+									}
+								}, {
+									field: 'guankanshu',
+									title: '观看的人数',
+									width: 100,
+									edit: 'text',
+									templet: function(res) {
+										return res.guankanshu
+									}
+								}, {
+									field: 'shoucangshu',
+									title: '收藏的人数',
+									width: 100,
+									edit: 'text',
+									templet: function(res) {
+										return res.guankanshu
+									}
+								}, {
+									fixed: 'right',
+									title: '操作',
+									toolbar: '#barDemo',
+									width: 200
+								}]
+							]
+						});
+					    //首次不执行
+					    if(!first){
+					      //do something
+					    }
+					  }
+			  	});
+				table.on('tool(test)', function(obj) {
+					var data = obj.data;
+					if(obj.event === 'del') {
+						layer.confirm('真的删除行么', function(index) {
+							layui.jquery.ajax({
+								type: "post",
+								url: "/adminDelet",
+								data: {'biao':'shipin','_id':obj.data._id},
+								success: function(data) {
+									layer.msg('删除成功');
+								}
+							});
+							obj.del();
+							layer.close(index);
+						});
+					} else {
+						layer.open({
+							title: '编辑视频',
+							type: 1,
+							area: ['500px', '500px'],
+							anim: 2,
+							content: layui.jquery("#wwwww"), //这里content是一个普通的String
+							success: function(layero, index){
+							   var dd=document.getElementById('1'),
+							    ee=document.getElementById('2'),
+							    ff=document.getElementById('3'),
+							    gg=document.getElementById('4'),
+							    su=document.getElementById('su');
+							    dd.value=obj.data.title;
+							    ee.value=obj.data.pic;
+							    ff.value=obj.data.aderess;
+							    gg.value=obj.data.yes;
+							    su.prototype=obj;
+							    su.index=index;
+							}
+						});
+					}
+				});
+			});
+		</script>
+		<style>
+			/*.layui-table{
+				margin: 0 50px !important;
+			}*/
+			/*.layui-table-header{
+				display: none;
+			}*/
+		</style>
+	</body>
+
+</html>

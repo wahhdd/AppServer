@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta charset="UTF-8">
+		<link rel="stylesheet" type="text/css" href="css/layui.css">
+		<link rel="stylesheet" type="text/css" href="css/modules/layer/default/layer.css" />
+		<title>景点管理</title>
+		<script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
+		<style>
+			#ddd {
+				position: fixed;
+				height: 100%;
+				width: 100%;
+				background: rgba(0, 0, 0, 0.8);
+				z-index: 9999;
+				top: 0;
+				display: none;
+			}
+			
+			#ff {
+				position: fixed;
+				left: 50%;
+				top: 50%;
+				font-size: 32px;
+				transform: translate(-50%, -50%);
+				z-index: 99;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="ddd">
+			<div id="ff" class='layui-icon layui-icon-refresh layui-anim layui-anim-loop'></div>
+		</div>
+		<form class="layui-form zengjia" method="post" v-on:submit.prevent="onSubmit" id="tel">
+			<div style="display: flex; margin-top: 50px;">
+				  <div class="layui-form-item" >
+				    <label class="layui-form-label">商品ID</label>
+				    <div class="layui-input-block" style="width: 250;">
+				      <input type="text" name="number" lay-verify="title" autocomplete="off" placeholder="请输入地址" class="layui-input" v-model="id">
+				    </div>
+				  </div>
+				  <div class="layui-form-item">
+				    <label class="layui-form-label">商品名称</label>
+				    <div class="layui-input-block" style="width: 250;">
+				      <input type="text" name="username" lay-verify="title" autocomplete="off" placeholder="请输入地址" class="layui-input" v-model="name">
+				    </div>
+				  </div>
+				   <div class="layui-form-item" >
+				    <label class="layui-form-label">商品价格</label>
+				    <div class="layui-input-block" style="width: 250;">
+				      <input type="text" name="number" lay-verify="title" autocomplete="off" placeholder="请输入地址" class="layui-input" v-model="min_price">
+				    </div>
+				  </div>
+				   <div class="layui-form-item" >
+				    <label class="layui-form-label">图片地址</label>
+				    <div class="layui-input-block" style="width: 250;">
+				      <input type="text" name="number" lay-verify="title" autocomplete="off" placeholder="请输入地址" class="layui-input" v-model="picture">
+				    </div>
+				  </div>
+			</div>
+			<div style="display: flex;">
+				
+				 <div class="layui-form-item">
+					<div class="layui-input-block">
+						<button class="layui-btn" lay-submit="" lay-filter="demo1">添加</button>
+					</div>
+				</div>
+			</div>
+		</form>
+		<div id="wwwww" style="display: none;">
+			<form class="layui-form zengjia" method="post" v-on:submit.prevent="onSubmit" id="tell" style="width: 470px; margin-top: 40px;">
+				<div class="layui-form-item" >
+				    <label class="layui-form-label">商品ID:</label>
+				    <div class="layui-input-block" style="width: 250;">
+				      <input type="text" name="number" lay-verify="title" autocomplete="off" placeholder="请输入商品ID" class="layui-input" id="1">
+				    </div>
+				  </div>
+				  <div class="layui-form-item">
+				    <label class="layui-form-label">商品名称:</label>
+				    <div class="layui-input-block" style="width: 250;">
+				      <input type="text" name="username" lay-verify="title" autocomplete="off" placeholder="请输入商品名称" class="layui-input" id="2">
+				    </div>
+				  </div>
+				   <div class="layui-form-item" >
+				    <label class="layui-form-label">商品价格:</label>
+				    <div class="layui-input-block" style="width: 250;">
+				      <input type="text" name="number" lay-verify="title" autocomplete="off" placeholder="请输入价格" class="layui-input" id="3">
+				    </div>
+				  </div>
+				   <div class="layui-form-item" >
+				    <label class="layui-form-label">图片地址:</label>
+				    <div class="layui-input-block" style="width: 250;">
+				      <input type="text" name="number" lay-verify="title" autocomplete="off" placeholder="请输入地址" class="layui-input" id="4">
+				    </div>
+				  </div>
+				   <div class="layui-form-item">
+					<div class="layui-input-block">
+						<button class="layui-btn" lay-submit="" lay-filter="demo1" id="su">确定</button>
+					</div>
+				</div>
+			</form>
+		</div>
+		<table class="layui-hide" id="test" lay-filter="test"></table>
+		<div id="rrrr" style="position: absolute; top: 694px;"></div>
+		<script type="text/javascript" src="js/layui.js"></script>
+		<script type="text/javascript" src="js/index.js"></script>
+
+		<script type="text/html" id="barDemo">
+			<a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+			<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+		</script>
+		<script>
+			var vm = new Vue({
+				el: '#tel',
+				data: {
+					id: 0,
+					name: '',
+					min_price: '',
+					picture: ''
+				},
+				methods: {
+					onSubmit() {
+						var obj={};
+						var dd={};
+						obj.id=this.id;
+						obj.name=this.name;
+						obj.min_price=this.min_price;
+						obj.picture=this.picture;
+						dd.obj=obj;
+						dd.biao='goods'
+						layui.jquery.ajax({
+							type: "post",
+							url: "/adminAdd",
+							data: JSON.stringify(dd),
+							success: function(data) {
+								layer.msg('添加成功');
+							},
+							error: function(error) {
+								console.log(error)
+							}
+						});
+					}
+				}
+			})
+			var vm2 = new Vue({
+				el: '#tell',
+				methods: {
+					onSubmit() {
+						var su=document.getElementById('su'),obj={},obj1={};
+						 var dd=document.getElementById('1'),
+							    ee=document.getElementById('2'),
+							    ff=document.getElementById('3'),
+							    gg=document.getElementById('4'),
+							    su=document.getElementById('su');
+						obj.id=dd.value;
+						obj.name=ee.value;
+						obj.min_price=ff.value;
+						obj.picture=gg.value;
+						obj1._id=su.prototype.data._id;
+						obj1.biao='goods';
+						obj1.obj=obj;
+						layui.jquery.ajax({
+							type: "post",
+							url: "/adminEdit",
+							data: JSON.stringify(obj1),
+							success: function(data) {
+								layer.msg('添加成功');
+								su.prototype.update(obj);
+							},
+							error: function(error) {
+								console.log(error);
+								layer.msg('添加失败');
+							}
+						});
+						layer.close(su.index)
+					}
+				}
+			})
+		</script>
+		<script>
+			layui.use(['layer', 'form'], function() {
+				var $ = layui.jquery,
+					form = layui.form;
+				form.render();
+			});
+		</script>
+		<script>
+			layui.use('table', function() {
+				var table = layui.table;
+				var laypage = layui.laypage;
+					laypage.render({
+			   	 	elem: 'rrrr' //注意，这里的 test1 是 ID，不用加 # 号
+			    	,count: 77 //数据总数，从服务端得到
+			    	,jump: function(obj, first){
+					    //obj包含了当前分页的所有参数，比如：
+					    console.log(obj)
+					    table.render({
+							elem: '#test',
+							url: '/adminshangpin?jj='+obj.curr,
+//							method: 'post',
+							toolbar: '#toolbarDemo',
+							title: '用户数据表',
+							cols: [
+								[{
+									type: 'checkbox',
+									fixed: 'left'
+								}, {
+									field: 'id',
+									title: '商品类型',
+									width: 120,
+									fixed: 'left',
+									//							unresize: true,
+									//							sort: true
+								}, {
+									field: 'name',
+									title: '商品名称',
+									width: 200,
+									edit: 'text',
+									templet: function(res) {
+										return '<em>' + res.name + '</em>'
+										//								return "<img src="+res.pic+"/>"
+									}
+								}, {
+									field: 'picture',
+									title: '商品图片地址',
+									width: 200,
+									edit: 'text',
+									templet: function(res) {
+										return '<em>' + res.picture + '</em>'
+										//								return "<img src="+res.pic+"/>"
+									}
+								}, {
+									field: 'min_price',
+									title: '商品价格',
+									width: 100,
+									edit: 'text',
+									templet: function(res) {
+										return '<em>' + res.min_price + '</em>'
+									}
+								}, {
+									field: 'month_saled',
+									title: '本月销售',
+									width: 100,
+									edit: 'text',
+									templet: function(res) {
+										return '<em>' + res.month_saled + '</em>'
+									}
+								}, {
+									field: 'like_ratio',
+									title: '好评度',
+									width: 100,
+									edit: 'text',
+									templet: function(res) {
+										return res.rating.like_ratio
+									}
+								}, {
+									fixed: 'right',
+									title: '操作',
+									toolbar: '#barDemo',
+									width: 150
+								}]
+							]
+						});
+					    //首次不执行
+					    if(!first){
+					      //do something
+					    }
+					  }
+			  	});
+				//监听行工具事件
+				table.on('tool(test)', function(obj) {
+					var data = obj.data;
+					if(obj.event === 'del') {
+						layer.confirm('真的删除行么', function(index) {
+							layui.jquery.ajax({
+								type: "post",
+								url: "/adminDelet",
+								data: {'biao':'goods','_id':obj.data._id},
+								dataType: "json",
+								success: function(data) {
+									layer.msg('删除成功');
+								}
+							});
+							obj.del();
+							layer.close(index);
+						});
+					} else{
+						layer.open({
+							title: '商品编辑',
+							type: 1,
+							area: ['500px', '500px'],
+							anim: 2,
+							content: layui.jquery("#wwwww"),
+							success: function(layero, index){
+							   var dd=document.getElementById('1'),
+							    ee=document.getElementById('2'),
+							    ff=document.getElementById('3'),
+							    gg=document.getElementById('4'),
+							    su=document.getElementById('su');
+							    console.log(obj.data)
+							    dd.value=obj.data.id;
+							    ee.value=obj.data.name;
+							    ff.value=obj.data.min_price;
+							    gg.value=obj.data.picture;
+							    su.prototype=obj;
+							    su.index=index;
+							}
+						});
+						// layer.prompt('编辑行：<br>'+ JSON.stringify(data))
+//						layer.prompt({
+//							formType: 2,
+//							value: data.id
+//						}, function(value, index) {
+//							obj.update({
+//								id: value
+//							});
+//							layui.jquery.ajax({
+//								type: "post",
+//								url: "/adminEdit",
+//								data: JSON.stringify([{
+//									_id: obj.data._id
+//								}, {
+//									id: value
+//								}]),
+//								dataType: "json",
+//								success: function(data) {
+//									console.log('success')
+//								}
+//							});
+//							layer.close(index);
+//						});
+//						layer.prompt({
+//							formType: 2,
+//							value: data.title
+//						}, function(value, index) {
+//							obj.update({
+//								title: value
+//							});
+//							layui.jquery.ajax({
+//								type: "post",
+//								url: "/adminEdit",
+//								data: JSON.stringify([{
+//									_id: obj.data._id
+//								}, {
+//									title: value
+//								}]),
+//								dataType: "json",
+//								success: function(data) {
+//									console.log('success')
+//								}
+//							});
+//							layer.close(index);
+//						});
+//						layer.prompt({
+//							formType: 2,
+//							value: data.details.weizhi.address
+//						}, function(value, index) {
+//							layui.jquery.ajax({
+//								type: "post",
+//								url: "/adminEdit",
+//								data: JSON.stringify([{
+//									_id: obj.data._id
+//								}, {
+//									'details.weizhi.address': value
+//								}]),
+//								dataType: "json",
+//								success: function(data) {
+//									console.log('success')
+//								}
+//							});
+//							var main = document.getElementsByClassName("layui-table-main")[0];
+//							var tr = main.getElementsByTagName('tr'),
+//								id = obj.data.id,
+//								address = obj.data.details.weizhi.address;
+//							for(let i = 0; i < tr.length; i++) {
+//								console.log(tr[i].children[1].innerText)
+//								console.log(tr[i].children[3].innerText)
+//								if((tr[i].children[1].innerText == id) && (tr[i].children[3].innerText == address)) {
+//									console.log(111)
+//									tr[i].children[3].innerText = value;
+//								}
+//							}
+//							obj.data.details.weizhi.address = value;
+//							layer.close(index);
+//						});
+//						layer.prompt({
+//							formType: 2,
+//							value: data.details.pingfen
+//						}, function(value, index) {
+//							var main = document.getElementsByClassName("layui-table-main")[0];
+//							var tr = main.getElementsByTagName('tr'),
+//								id = obj.data.id,
+//								pingfen = obj.data.details.pingfen;
+//							for(let i = 0; i < tr.length; i++) {
+//								if((tr[i].children[1].innerText == id) && (tr[i].children[4].innerText == pingfen)) {
+//									tr[i].children[4].innerText = value;
+//								}
+//							}
+//							layui.jquery.ajax({
+//								type: "post",
+//								url: "/adminEdit",
+//								data: JSON.stringify([{
+//									_id: obj.data._id
+//								}, {
+//									'details.pingfen': value
+//								}]),
+//								dataType: "json",
+//								success: function(data) {
+//									console.log('success')
+//								}
+//							});
+//
+//							layer.close(index);
+//						});
+//						layer.prompt({
+//							formType: 2,
+//							value: data.details.rightTime.time
+//						}, function(value, index) {
+//							var main = document.getElementsByClassName("layui-table-main")[0];
+//							var tr = main.getElementsByTagName('tr'),
+//								id = obj.data.id,
+//								time = obj.data.details.rightTime.time;
+//							for(let i = 0; i < tr.length; i++) {
+//								if((tr[i].children[1].innerText == id) && (tr[i].children[5].innerText == time)) {
+//									tr[i].children[5].innerText = value;
+//								}
+//							}
+//							layui.jquery.ajax({
+//								type: "post",
+//								url: "/adminEdit",
+//								data: JSON.stringify([{
+//									_id: obj.data._id
+//								}, {
+//									'details.rightTime.time': value
+//								}]),
+//								dataType: "json",
+//								success: function(data) {
+//									console.log('success')
+//								}
+//							});
+//							layer.close(index);
+//						});
+					}
+				});
+			});
+		</script>
+	</body>
+
+</html>

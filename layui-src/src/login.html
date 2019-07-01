@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" type="text/css" href="css/layui.css">
+	<title>登录</title>
+</head>
+<body>
+	<form class="layui-form" action="">
+		<div class="layui-form-item">
+		    <label class="layui-form-label">管理员名</label>
+		    <div class="layui-input-block">
+		      <input type="text" name="title" lay-verify="title" autocomplete="off" placeholder="请输入" class="layui-input">
+		    </div>
+		  </div>
+		  <div class="layui-form-item">
+		    <label class="layui-form-label">密码</label>
+		    <div class="layui-input-block">
+		      <input type="text" name="username" lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+		    </div>
+		  </div>
+		   <div class="layui-form-item">
+    <div class="layui-input-block">
+      <button class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>
+    </div>
+  </div>
+	</form>
+  <script type="text/javascript" src="js/layui.js"></script>
+  <script type="text/javascript" src="js/index.js"></script>
+</body>
+<style type="text/css">
+	body{
+		position: relative;
+		background: rgba(62, 33, 15, 0.5);
+	}
+	.layui-form{
+		position: absolute;
+		top: 200px;
+		left: 50%;
+		width: 30%;
+		height: 30%;
+		transform: translate(-50%);
+	}
+</style>
+</html>
